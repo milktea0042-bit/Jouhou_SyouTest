@@ -1,9 +1,10 @@
-// quiz-site/app.js v2
+// quiz-site/app.js v3
 
 /* =====================================================
    状態管理
    ===================================================== */
 const state = {
+  selectedYear: '昨年', // 初期値は昨年
   mode: null,           // 'list' | 'sequential'
   answers: {},          // { questionId: choiceId }
   seqOrder: 'asc',      // 'asc' | 'random'
@@ -13,6 +14,10 @@ const state = {
 };
 
 const app = document.getElementById('app');
+
+function updateQuestionsArray() {
+  questions = quizData[state.selectedYear] || [];
+}
 
 /* =====================================================
    ユーティリティ
@@ -151,6 +156,7 @@ function attachChoiceHandlers() {
    ホーム画面
    ===================================================== */
 function renderHome() {
+  updateQuestionsArray();
   state.mode        = null;
   state.answers     = {};
   state.currentIndex = 0;
@@ -170,8 +176,14 @@ function renderHome() {
       <div class="home-view">
         <div class="home-hero">
           <h1>過去問題</h1>
-          <p>下記よりモードを選択して学習を開始してください</p>
-          <span class="total-badge">全 ${questions.length} 問</span>
+          <p>下記より年度とモードを選択して学習を開始してください</p>
+          
+          <div class="year-selector">
+            <button class="year-tab ${state.selectedYear === '昨年' ? 'active' : ''}" data-year="昨年">昨年の過去問</button>
+            <button class="year-tab ${state.selectedYear === '2年前' ? 'active' : ''}" data-year="2年前">2年前の過去問</button>
+          </div>
+          
+          <span class="total-badge">${state.selectedYear} — 全 ${questions.length} 問</span>
         </div>
         <div class="mode-grid">
           <div class="mode-card" id="btn-mode-list" role="button" tabindex="0"
@@ -191,6 +203,13 @@ function renderHome() {
         </div>
       </div>
     </main>`;
+
+  document.querySelectorAll('.year-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      state.selectedYear = e.target.dataset.year;
+      renderHome(); // 年度を切り替えて再描画
+    });
+  });
 
   document.getElementById('btn-mode-list').addEventListener('click', () => {
     state.mode = 'list';
@@ -218,8 +237,8 @@ function renderSeqSettings() {
       <header class="site-header">
         <div class="header-inner">
           <div class="header-left">
-            <span class="site-title">テスト勉強クイズ — 通しモード</span>
-            <span class="header-subtitle">出題設定</span>
+            <span class="site-title">情報科学中間テスト用クイズ — 通しモード</span>
+            <span class="header-subtitle">${state.selectedYear} / 出題設定</span>
           </div>
           <button class="btn-back" id="btn-home">← トップへ</button>
         </div>
@@ -247,7 +266,7 @@ function renderSeqSettings() {
             <p class="setting-note" id="order-note">
               ${isRandom
                 ? '問題をランダムな順序で出題します。'
-                : '問題を番号の昇順で出題します（1, 2, 3…25）。'}
+                : '問題を番号の昇順で出題します。'}
             </p>
 
             <button class="btn btn-gold setting-start-btn" id="btn-start">
@@ -316,8 +335,8 @@ function renderListIndex() {
     <header class="site-header">
       <div class="header-inner">
         <div class="header-left">
-          <span class="site-title">テスト勉強クイズ — 一覧モード</span>
-          <span class="header-subtitle">問題を選んでください</span>
+          <span class="site-title">情報科学中間テスト用クイズ — 一覧モード</span>
+          <span class="header-subtitle">${state.selectedYear}</span>
         </div>
         <button class="btn-back" id="btn-home">← トップへ</button>
       </div>
@@ -365,8 +384,8 @@ function renderListDetail(qId) {
     <header class="site-header">
       <div class="header-inner">
         <div class="header-left">
-          <span class="site-title">テスト勉強クイズ — 一覧モード</span>
-          <span class="header-subtitle">問題 ${qId}</span>
+          <span class="site-title">情報科学中間テスト用クイズ — 一覧モード</span>
+          <span class="header-subtitle">${state.selectedYear} / 問題 ${qId}</span>
         </div>
         <button class="btn-back" id="btn-to-index">← 一覧へ</button>
       </div>
@@ -434,8 +453,8 @@ function renderSequentialMode() {
     <header class="site-header">
       <div class="header-inner">
         <div class="header-left">
-          <span class="site-title">テスト勉強クイズ — 通しモード</span>
-          <span class="header-subtitle">${state.currentIndex + 1} / ${total} 問目 ${orderBadge}</span>
+          <span class="site-title">情報科学中間テスト用クイズ — 通しモード</span>
+          <span class="header-subtitle">${state.selectedYear} / ${state.currentIndex + 1} / ${total} 問目 ${orderBadge}</span>
         </div>
         <button class="btn-back" id="btn-home">← トップへ</button>
       </div>
@@ -529,8 +548,8 @@ function renderResults() {
     <header class="site-header">
       <div class="header-inner">
         <div class="header-left">
-          <span class="site-title">テスト勉強クイズ — 結果</span>
-          <span class="header-subtitle">全 ${total} 問</span>
+          <span class="site-title">情報科学中間テスト用クイズ — 結果</span>
+          <span class="header-subtitle">${state.selectedYear} / 全 ${total} 問</span>
         </div>
       </div>
     </header>

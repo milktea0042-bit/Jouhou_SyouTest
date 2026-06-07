@@ -1,5 +1,5 @@
 /* ============================================================
-   quiz-site/style.css v2
+   quiz-site/style.css v3
    フォーマルデザイン: 非角丸 + ハードドロップシャドウ
    ============================================================ */
 
@@ -209,6 +209,39 @@ button { cursor: pointer; }
   letter-spacing: 0.08em;
 }
 .home-hero p { color: var(--text-muted); font-size: 0.95rem; margin-top: 18px; }
+
+/* 年度切替タブ */
+.year-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+.year-tab {
+  background: var(--surface);
+  border: 2px solid var(--border-dark);
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: var(--shadow-sm);
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.year-tab.active {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy-dark);
+  box-shadow: var(--shadow-md);
+  transform: translate(-2px, -2px);
+}
+.year-tab:not(.active):hover {
+  background: var(--surface-2);
+  transform: translate(-1px, -1px);
+}
+
 .total-badge {
   display: inline-block;
   background: var(--navy);
@@ -219,6 +252,7 @@ button { cursor: pointer; }
   letter-spacing: 0.06em;
   box-shadow: var(--shadow-sm);
 }
+
 .mode-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -314,7 +348,7 @@ button { cursor: pointer; }
   font-weight: 700;
 }
 
-/* トグルスイッチ（フォーマル・非角丸） */
+/* トグルスイッチ */
 .toggle-switch {
   position: relative;
   width: 54px;
@@ -635,6 +669,8 @@ button { cursor: pointer; }
   /* ホーム */
   .home-view  { padding: 40px 16px 40px; }
   .home-hero h1 { font-size: 1.8rem; }
+  .year-selector { flex-direction: column; gap: 8px; margin-top: 16px; margin-bottom: 12px; }
+  .year-tab { width: 100%; text-align: center; padding: 12px 16px; }
   .mode-grid  { grid-template-columns: 1fr; gap: 16px; }
   .mode-card  { padding: 24px 20px; }
   .mode-icon  { font-size: 2rem; }
